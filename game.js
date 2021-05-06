@@ -116,6 +116,7 @@ let projectiles =[]
 let enemys=[]
 let particles=[]
 let animateID
+let scores=[]
 function animate(){
     particles.forEach((particle,indexparticle)=>{
         if(particle.long>(Math.random()*80+30)){
@@ -145,8 +146,10 @@ function animate(){
         const dist=Math.hypot(player.x-enemy.x,player.y-enemy.y)
         if(dist-player.radius-enemy.radius<0){
             // bool=1;
+            scores.push(points)
             document.getElementById("notification").style.display="block"
             document.getElementById("bigscore").innerHTML=points
+            document.getElementById("maxscorepoints").innerHTML=scores.reduce(function(a, b) {return Math.max(a, b);});
             cancelAnimationFrame(animateID)
         }
         projectiles.forEach((projectile,projectileIndex)=>{
@@ -178,6 +181,7 @@ function animate(){
     })
 }
 addEventListener("click",(event)=>{
+
     const angle = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))
     const velocity={
         x: 6*Math.cos(angle),
