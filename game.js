@@ -198,6 +198,8 @@ function init(){
     projectiles =[]
     enemys=[]
     particles=[]
+    points=0
+    document.getElementById("number").innerHTML=points
 }
 // animate()
 // spawnEnemy()
