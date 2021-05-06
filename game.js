@@ -6,6 +6,16 @@ var points=0
 var bool=1
 var startBTN=document.getElementById("startgamebutton")
 // document.getElementById("startgamebutton").onclick=function() {displayX()}
+function init(){
+    x=canvas.width/2;
+    y=canvas.height/2;
+    player = new Player(x,y,10,'white')
+    projectiles =[]
+    enemys=[]
+    particles=[]
+    points=0
+    document.getElementById("number").innerHTML=points
+}
 class Player{
     constructor(x,y,radius,color){
         this.x=x;
@@ -87,7 +97,7 @@ class Particle{
     }
 }
 function spawnEnemy(){
-        setInterval(()=>{
+        XXX = setInterval(()=>{
         const radius= Math.random()*(30-4)+4
         let x 
         let y 
@@ -111,12 +121,13 @@ function spawnEnemy(){
 }   
 let x=canvas.width/2;
 let y=canvas.height/2;
-let player = new Player(x,y,10,'white')
-let projectiles =[]
-let enemys=[]
-let particles=[]
+var player = new Player(x,y,10,'white')
+var projectiles =[]
+var enemys=[]
+var particles=[]
 let animateID
-let scores=[]
+let XXX
+var scores=[]
 function animate(){
     particles.forEach((particle,indexparticle)=>{
         if(particle.long>(Math.random()*80+30)){
@@ -150,6 +161,8 @@ function animate(){
             document.getElementById("notification").style.display="block"
             document.getElementById("bigscore").innerHTML=points
             document.getElementById("maxscorepoints").innerHTML=scores.reduce(function(a, b) {return Math.max(a, b);});
+            enemys=[]
+            clearInterval(XXX)
             cancelAnimationFrame(animateID)
         }
         projectiles.forEach((projectile,projectileIndex)=>{
@@ -187,24 +200,16 @@ addEventListener("click",(event)=>{
         x: 6*Math.cos(angle),
         y: 6*Math.sin(angle)
     }
-projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'white',velocity))
+    projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'white',velocity))
 })
-startBTN.addEventListener('click',()=>{
+startBTN.addEventListener('click',(event)=>{
     init()
+    console.log(enemys)
     animate()
     spawnEnemy()
     document.getElementById("notification").style.display="none"
 })
-function init(){
-    x=canvas.width/2;
-    y=canvas.height/2;
-    player = new Player(x,y,10,'white')
-    projectiles =[]
-    enemys=[]
-    particles=[]
-    points=0
-    document.getElementById("number").innerHTML=points
-}
+
 // animate()
 // spawnEnemy()
 // function displayX(){
