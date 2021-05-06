@@ -114,7 +114,7 @@ const particles=[]
 let animateID
 function animate(){
     particles.forEach((particle,indexparticle)=>{
-        if(particle.long>(Math.random()*100)+50){
+        if(particle.long>(Math.random()*400+100)){
             setTimeout(()=>{
                 particles.splice(indexparticle,1)
             })
@@ -148,7 +148,7 @@ function animate(){
             const dist=Math.hypot(projectile.x-enemy.x,projectile.y-enemy.y)
             if(dist-projectile.radius-enemy.radius<0){
                 for(let i=0;i<8;i++){
-                particles.push(new Particle(projectile.x,projectile.y, 3, enemy.color,{
+                particles.push(new Particle(projectile.x,projectile.y, 2, enemy.color,{
                     x:Math.random()-0.5,
                     y:Math.random()-0.5
                 },0))
