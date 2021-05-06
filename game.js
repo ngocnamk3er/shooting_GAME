@@ -59,6 +59,29 @@ class Enemy{
         this.y=this.y+this.velocity.y
     }
 }
+class Particle{
+    constructor(x,y,radius,color,velocity,long){
+        this.x=x;
+        this.y=y;
+        this.color=color;
+        this.radius=radius;
+        this.velocity=velocity;
+        this.long=long;
+    }
+    draw(){
+        c.beginPath();
+        c.arc(this.x,this.y,this.radius,0,2*Math.PI);
+        c.fillStyle=this.color;
+        c.fill();
+    }
+    update()
+    {
+        this.draw()
+        this.x=this.x+this.velocity.x
+        this.y=this.y+this.velocity.y
+        this.long=this.long+1;
+    }
+}
 function spawnEnemy(){
         setInterval(()=>{
         const radius= Math.random()*(30-4)+4
@@ -81,14 +104,23 @@ function spawnEnemy(){
         enemys.push(new Enemy(x,y,radius,color,velocity))
 
     },1000)
-}
+}   
 const x=canvas.width/2;
 const y=canvas.height/2;
 const player = new Player(x,y,10,'white')
 const projectiles =[]
 const enemys=[]
+const particles=[]
 let animateID
 function animate(){
+    particles.forEach((particle,indexparticle)=>{
+        if(particle.long>(Math.random()*100)+50){
+            setTimeout(()=>{
+                particles.splice(indexparticle,1)
+            })
+        }
+        particle.update()
+    })
     animateID= requestAnimationFrame(animate)
     c.fillStyle='rgba(0,0,0,0.1)'
     c.fillRect(0,0,canvas.width,canvas.height)
@@ -115,13 +147,16 @@ function animate(){
         projectiles.forEach((projectile,projectileIndex)=>{
             const dist=Math.hypot(projectile.x-enemy.x,projectile.y-enemy.y)
             if(dist-projectile.radius-enemy.radius<0){
-                if(enemy.radius>10){
-                    enemy.radius-=10;
-                    if(enemy.radius<=4){
-                        setTimeout(()=>{
-                            enemys.splice(index,1)
-                        })
-                    }
+                for(let i=0;i<8;i++){
+                particles.push(new Particle(projectile.x,projectile.y, 3, enemy.color,{
+                    x:Math.random()-0.5,
+                    y:Math.random()-0.5
+                },0))
+                }
+                if(enemy.radius-10>4){
+                    gsap.to(enemy,{
+                        radius: enemy.radius-10
+                    })
                     setTimeout(()=>{
                         projectiles.splice(projectileIndex,1)
                     })

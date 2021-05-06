@@ -1,0 +1,9 @@
+#relative{
+    position: relative;
+}
+#score{
+    position: absolute;
+    color: aliceblue;
+    margin-top: 2px;
+    margin-left: 4px;
+}
