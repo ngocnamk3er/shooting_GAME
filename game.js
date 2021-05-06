@@ -2,6 +2,10 @@ const canvas = document.querySelector('canvas');
 canvas.width=innerWidth;
 canvas.height=innerHeight;
 const c=canvas.getContext('2d');
+var points=0
+var bool=1
+var startBTN=document.getElementById("startgamebutton")
+// document.getElementById("startgamebutton").onclick=function() {displayX()}
 class Player{
     constructor(x,y,radius,color){
         this.x=x;
@@ -105,12 +109,12 @@ function spawnEnemy(){
 
     },1000)
 }   
-const x=canvas.width/2;
-const y=canvas.height/2;
-const player = new Player(x,y,10,'white')
-const projectiles =[]
-const enemys=[]
-const particles=[]
+let x=canvas.width/2;
+let y=canvas.height/2;
+let player = new Player(x,y,10,'white')
+let projectiles =[]
+let enemys=[]
+let particles=[]
 let animateID
 function animate(){
     particles.forEach((particle,indexparticle)=>{
@@ -140,17 +144,20 @@ function animate(){
         enemy.update()
         const dist=Math.hypot(player.x-enemy.x,player.y-enemy.y)
         if(dist-player.radius-enemy.radius<0){
-            console.log(animateID)
+            // bool=1;
+            document.getElementById("notification").style.display="block"
+            document.getElementById("bigscore").innerHTML=points
             cancelAnimationFrame(animateID)
-            console.log(animateID)
         }
         projectiles.forEach((projectile,projectileIndex)=>{
             const dist=Math.hypot(projectile.x-enemy.x,projectile.y-enemy.y)
             if(dist-projectile.radius-enemy.radius<0){
+                points=points+100;
+                document.getElementById('number').innerHTML=points
                 for(let i=0;i<(Math.random()*10+10);i++){
                 particles.push(new Particle(projectile.x,projectile.y, (Math.random()*1)+1, enemy.color,{
-                    x:(Math.random()-0.5)*3,
-                    y:(Math.random()-0.5)*3
+                    x:(Math.random()-0.5)*3.5,
+                    y:(Math.random()-0.5)*3.5
                 },0))
                 }
                 if(enemy.radius-10>4){
@@ -178,5 +185,31 @@ addEventListener("click",(event)=>{
     }
 projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'white',velocity))
 })
-animate()
-spawnEnemy()
+startBTN.addEventListener('click',()=>{
+    init()
+    animate()
+    spawnEnemy()
+    document.getElementById("notification").style.display="none"
+})
+function init(){
+    x=canvas.width/2;
+    y=canvas.height/2;
+    player = new Player(x,y,10,'white')
+    projectiles =[]
+    enemys=[]
+    particles=[]
+}
+// animate()
+// spawnEnemy()
+// function displayX(){
+//     if(bool==1){
+//         bool=0
+//         document.getElementById("notification").style.display="none"
+//     }else{
+//         bool=1
+//         document.getElementById("notification").style.display="block"
+//     }
+// }
+
+
+

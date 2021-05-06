@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DEMO</title>
     <link rel="stylesheet" href="css.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap" rel="stylesheet">
     <style>
         body{
             margin: 0;
@@ -14,7 +16,17 @@
 </head>
 
 <body>
+    <div id="relative">
+        <div id="score">Score: <span id="number"></span></div>
+        <div id="absolute">
+            <div id="notification">
+                <div id="bigscore">0</div>
+                <div id="point">Points</div>
+                <button id="startgamebutton">Start Game</button>
+            </div>
+        </div>
     <canvas></canvas>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js" 
     integrity="sha512-cdV6j5t5o24hkSciVrb8Ki6FveC2SgwGfLE31+ZQRHAeSRxYhAQskLkq3dLm8ZcWe1N3vBOEYmmbhzf7NTtFFQ==" crossorigin="anonymous"></script>
     <script src="game.js"></script>
