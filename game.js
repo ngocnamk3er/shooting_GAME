@@ -3,7 +3,8 @@ canvas.width=innerWidth;
 canvas.height=innerHeight;
 const c=canvas.getContext('2d');
 var points=0
-var bool=1
+var soundshot=new Audio('SHOT.mp3')
+var soundstone=new Audio('VACHAM.mp3')
 var startBTN=document.getElementById("startgamebutton")
 // document.getElementById("startgamebutton").onclick=function() {displayX()}
 function init(){
@@ -168,6 +169,7 @@ function animate(){
         projectiles.forEach((projectile,projectileIndex)=>{
             const dist=Math.hypot(projectile.x-enemy.x,projectile.y-enemy.y)
             if(dist-projectile.radius-enemy.radius<0){
+                soundstone.play()
                 points=points+100;
                 document.getElementById('number').innerHTML=points
                 for(let i=0;i<(Math.random()*10+10);i++){
@@ -201,6 +203,7 @@ addEventListener("click",(event)=>{
         y: 6*Math.sin(angle)
     }
     projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'white',velocity))
+    soundshot.play()
 })
 startBTN.addEventListener('click',(event)=>{
     init()
