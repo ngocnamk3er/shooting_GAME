@@ -5,7 +5,10 @@ const c=canvas.getContext('2d');
 var points=0
 var soundshot=new Audio('SHOT.mp3')
 var soundstone=new Audio('VACHAM.mp3')
+var ting= new Audio('TING.mp3')
+var selectgun = 0
 var startBTN=document.getElementById("startgamebutton")
+var hlsx=0
 // document.getElementById("startgamebutton").onclick=function() {displayX()}
 function init(){
     x=canvas.width/2;
@@ -15,7 +18,9 @@ function init(){
     enemys=[]
     particles=[]
     points=0
+    gunNumberGifts=[]
     document.getElementById("number").innerHTML=points
+    selectgun=0
 }
 class Player{
     constructor(x,y,radius,color){
@@ -99,7 +104,7 @@ class Particle{
 }
 function spawnEnemy(){
         XXX = setInterval(()=>{
-        const radius= Math.random()*(30-4)+4
+        const radius= Math.random()*(30-6)+6
         let x 
         let y 
         if(Math.random()<0.5){
@@ -119,7 +124,56 @@ function spawnEnemy(){
         enemys.push(new Enemy(x,y,radius,color,velocity))
 
     },1000)
-}   
+}
+class gunNumberGift{
+    constructor(x,y,radius,color,velocity,long){
+        this.x=x;
+        this.y=y;
+        this.color=color;
+        this.radius=radius;
+        this.velocity=velocity;
+        this.long=long;
+    }
+    draw(){
+        c.beginPath();
+        c.arc(this.x,this.y,this.radius,0,2*Math.PI);
+        c.strokeStyle=this.color;
+        c.stroke();
+    }
+    update()
+    {
+        this.draw()
+        this.x=this.x+this.velocity.x
+        this.y=this.y+this.velocity.y
+        this.long=this.long+1;
+    }
+}
+function spawngunNumberGift(){
+    YYY = setInterval(()=>{
+    const radius= 10
+    let x 
+    let y 
+    if(Math.random()<0.5){
+        x=Math.random()<0.5 ? 0-radius:canvas.width+radius
+        y=Math.random()*canvas.height
+    }
+    else{
+        y=Math.random()<0.5 ? 0-radius:canvas.height+radius
+        x=Math.random()*canvas.width
+    }
+    const arr=[60,360]
+    const index=Math.floor(Math.random()*2)
+    hlsx=arr[index]
+    const color= `hsl(${hlsx},50%,50%)`
+    const angle = Math.atan2((canvas.height/2-y),(canvas.width/2-x))
+    const velocity={
+    x: Math.cos(angle),
+    y: Math.sin(angle)
+    }
+    gunNumberGifts.push(new gunNumberGift(x,y,radius,color,velocity))
+
+},Math.random()*5000+10000)
+}
 let x=canvas.width/2;
 let y=canvas.height/2;
 var player = new Player(x,y,10,'white')
@@ -128,7 +182,9 @@ var enemys=[]
 var particles=[]
 let animateID
 let XXX
+let YYY
 var scores=[]
+var gunNumberGifts=[]
 function animate(){
     particles.forEach((particle,indexparticle)=>{
         if(particle.long>(Math.random()*80+30)){
@@ -164,6 +220,7 @@ function animate(){
             document.getElementById("maxscorepoints").innerHTML=scores.reduce(function(a, b) {return Math.max(a, b);});
             enemys=[]
             clearInterval(XXX)
+            clearInterval(YYY)
             cancelAnimationFrame(animateID)
         }
         projectiles.forEach((projectile,projectileIndex)=>{
@@ -194,9 +251,21 @@ function animate(){
             }
         })
     })
+    gunNumberGifts.forEach((gunNumberGift,index)=>{
+        gunNumberGift.update()
+        const dist=Math.hypot(player.x-gunNumberGift.x,player.y-gunNumberGift.y)
+        if(dist-gunNumberGift.radius-player.radius<=0){
+            ting.play()
+            if(gunNumberGift.color=="hsl(60,50%,50%)"){selectgun=2}
+            else if(gunNumberGift.color=="hsl(360,50%,50%)"){selectgun=1}
+            gunNumberGifts.splice(index,1)
+            setTimeout(()=>{selectgun=0 ; }, 6000);
+        }
+    })
 }
-addEventListener("click",(event)=>{
 
+addEventListener("click",(event)=>{
+    if (selectgun==0){
     const angle = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))
     const velocity={
         x: 6*Math.cos(angle),
@@ -204,12 +273,43 @@ addEventListener("click",(event)=>{
     }
     projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'white',velocity))
     soundshot.play()
+    }
+    if (selectgun==1){
+        const angle1 = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))
+        const angle2 = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))+0.18
+        const angle3 = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))-0.18
+        const velocity1={
+            x: 6*Math.cos(angle1),
+            y: 6*Math.sin(angle1)
+        }
+        const velocity2={
+            x: 6*Math.cos(angle2),
+            y: 6*Math.sin(angle2)
+        }
+        const velocity3={
+            x: 6*Math.cos(angle3),
+            y: 6*Math.sin(angle3)
+        }
+        projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'red',velocity1))
+        projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'red',velocity2))
+        projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'red',velocity3))
+        soundshot.play()
+    }
+    if (selectgun==2){
+        const angle = Math.atan2((event.clientY-canvas.height/2),(event.clientX-canvas.width/2))
+        const velocity={
+            x: 12*Math.cos(angle),
+            y: 12*Math.sin(angle)
+        }
+        projectiles.push(new Projectile(canvas.width/2,canvas.height/2,5,'yellow',velocity))
+        soundshot.play()
+    }
 })
 startBTN.addEventListener('click',(event)=>{
     init()
-    console.log(enemys)
     animate()
     spawnEnemy()
+    spawngunNumberGift()
     document.getElementById("notification").style.display="none"
 })
 
